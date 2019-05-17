@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+  <!-- header -->
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome to my memories</title>
+    <? include "../include/header.html"; ?>
+    <!-- navigation -->
+    <nav>
+        nav 영역
+        <? include "../include/nav.html"; ?>
+    </nav>
+    <!-- // navigation -->
+  </head>
+  <!-- // header -->
+  <body>
+    <!-- content -->
+    <section>
+        content 영역
+        <?
+        $conn = mysqli_connect("183.103.70.254","fifauser","1234","test");
+        var_dump($conn);
+        ?>
+    </section>
+    <!-- // content -->
+    <!-- footer -->
+    <footer>
+        footer 영역
+    </footer>
+    <!-- // footer -->
+    <a href="/board">게시판으로 이동</a>
+  </body>
+</html>
