@@ -1,0 +1,38 @@
+<? include "../include/head.html"; ?>
+<? include "../include/nav.html"; ?>
+<div class="leftandcenter">
+    <? include "../include/left.html"; ?>
+    <div class="col-lg-8 center">
+        <div class="overlay"></div>
+        <?
+            $query = "select * from tb_board";
+            $result = $db->fetch_array($query);
+            $count = count($result);
+            $number = 1;
+            echo date("Y-m-d H:i:s",time());
+        ?>
+        <p>PHP 게시판</p>
+        <div>
+            <table>
+                <tr>
+                    <td>번호</td>
+                    <td>제목</td>
+                    <td>작성자</td>
+                    <td>작성일(수정일)</td>
+                </tr>
+                <?for ($i=0; $i < $count; $i++) { ?>
+                    <tr>
+                        <td> <?=$number;?> </td>
+                        <td> <?=$result[$i][title];?> </td>
+                        <td> <?=$result[$i][user];?> </td>
+                        <td> <?=$result[$i][reg_date];?> </td>
+                    </tr>
+                <?
+                $number++;
+                }?>
+            </table>
+        </div>
+    </div>
+</div>
+
+<? include "../include/footer.html"; ?>

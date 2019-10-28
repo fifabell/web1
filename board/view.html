@@ -1,0 +1,40 @@
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <? include "../include/head.html"; ?>
+    </head>
+    <body>
+        <? include "../include/nav.html"; ?>
+        <div class="leftandcenter">
+            <? include "../include/left.html"; ?>
+            <div class="col-lg-8 center">
+                <div class="overlay"></div>
+                
+                <p><?=$type;?> 게시판</p>
+                <?
+                    $query = 
+                    "SELECT * FROM tb_board WHERE 1 and type='$type' and uid='$uid'";
+                    $result = $db->row($query);
+                    //echo $result[uid];
+                ?>
+                <div>
+                    <p style="border-top: 1px solid #333; border-bottom: 1px solid #333;">제목</p>
+                    <p><?=$result[title];?></p>
+                    <p style="border-top: 1px solid #333; border-bottom: 1px solid #333;">내용</p>
+                    <p><?=$result[content];?></p>
+                    
+                    <?if($SITE_USER_UID==2){?>
+                        <div style="text-align:right;">
+                            <a href="javascript:;" onclick="location.href='./write.html?type=<?=$type?>&uid=<?=$uid?>';">수정하기</a>
+                        </div>
+                    <?}?>
+                    
+                </div>
+            </div>
+        </div>
+
+        <? include "../include/footer.html"; ?>
+    </body>
+</html>

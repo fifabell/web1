@@ -1,0 +1,92 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <? include "../include/head.html"; ?>
+</head>
+    <body>
+        <? include "../include/nav.html"; ?>
+        
+
+        <div class="leftandcenter">
+            <? include "../include/left.html"; ?>
+            <div class="col-lg-8 center">
+                <div class="overlay"></div>
+                <?
+                    $type = escape_string($_GET['type']);
+
+                    // 갯수 뽑기용
+                    $query = "select count(uid) as count from tb_board where type='$type'";
+                    $result = $db->row($query);
+                    $total_count = $result[count]; // 전체 카운트 *
+                    $limit_count = 5; // 페이지당 리스트(세로) 갯수 *
+                    $page_bound = 3; // 페이지 바운드(모바일=5/pc=10 설정) *
+                    $get_page = escape_string($_GET['page']); // 넘겨받아온 현재 페이지 *
+                    $page_no = ($get_page>0)?$get_page-1:0; // 현재 페이지 번호 -1
+                    $request_uri = $_SERVER['REQUEST_URI']; // 페이지 uri
+                    $pageNavi = $common->paging($total_count, $limit_count, $page_bound, $get_page, $request_uri);
+                    
+                    $limit_start_no = $limit_count * $page_no; // limit 시작번호
+                    $limit = " limit $limit_start_no, $limit_count ";
+                    $query1 = "select * from tb_board where type='$type' order by uid desc $limit";
+                    $result1 = $db->fetch_array($query1);
+                    $count1 = count($result1);
+                    
+                    $number = $total_count - $limit_start_no; // 전체 중 해당 게시글 번호
+                ?>
+                <p><?=$type;?> 게시판</p>
+                <div>
+                    <table>
+                        <colgroup>
+                            <col width="10%">
+                            <col width="%">
+                            <col width="20%">
+                            <col width="20%">
+                        </colgroup>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>작성일<br>(수정일)</th>
+                        </tr>
+                        <?for ($i=0; $i < $count1; $i++) { ?>
+                            <?$list_page = "./view.html?type=".$type."&uid=".$result1[$i][uid]."";?>
+                            <tr>
+                                <td><a href="<?=$list_page;?>"><?=$number;?></a></td>
+                                <td><a href="<?=$list_page;?>"><?=$result1[$i][title];?></a></td>
+                                <td><a href="<?=$list_page;?>"><?=$result1[$i][user];?></a></td>
+                                <td><a href="<?=$list_page;?>"><?=$result1[$i][reg_date];?></a></td>
+                            </tr>
+                        <?
+                            $number--;
+                        }?>
+                    </table>
+                    <?
+                        
+                    ?>
+                    <div class="float_mother lineandwrite">
+                        <div class="line">
+                            <ul class="float_mother">
+                                <?
+                                    // 게시판 목록 출력
+                                    echo $pageNavi;
+                                ?>
+                            </ul>
+                        </div>
+                        <?if($SITE_USER_UID==2){?>
+                            <div class="write">
+                                <a href="javascript:;" onclick="location.href='./write.html?type=<?=$type?>';">글쓰기</a>
+                            </div>
+                        <?}?>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <? include "../include/footer.html"; ?>
+
+    </body>
+</html>

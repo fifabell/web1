@@ -1,0 +1,73 @@
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <? include "../include/head.html"; ?>
+    </head>
+    <body>
+        <? include "../include/nav.html"; ?>
+        <?
+            if($_SESSION["SITE_USER_UID"]!=2) {
+                $common->error("관리자만 가능합니다.","previous","");
+            }
+        ?>
+        <div class="leftandcenter">
+            <? include "../include/left.html"; ?>
+            <div class="center">
+                <div class="overlay"></div>
+                <div style="margin:0 5px;">
+                    <p><?=$type;?> 작성 페이지입니다.</p>
+                    <?
+                        if($uid) {
+                            $query = "select * from tb_board where uid='$uid'";
+                            $result = $db->row($query);
+                        }
+                    ?>
+                    <div>
+                        <form name="signform" method="post" action="./ok.php">
+                            <input type="hidden" name="type" value="<?=$type?>">
+                            <?if($uid){?>
+                                <input type="hidden" name="uid" value="<?=$uid?>">
+                            <?}?>
+                            <div style="margin-bottom:15px;">
+                                <label for="subject">제목</label>
+                                <input type="text" id="subject" name="subject" size="35" style="margin-left:10px;" value="<?=($uid)?$result[title]:''?>">
+                            </div>
+                            <div>
+                                <label for="contents">내용</label>
+                                <textarea id="contents" name="contents"><?=($uid)?$result[content]:''?></textarea>
+                            </div>
+                            <?if($uid){?>
+                                <input type="submit" value="수정">
+                            <?} else {?>
+                                <input type="submit" value="등록">
+                            <?}?>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function(){
+                $("#signform").submit();
+            });
+
+            // CKEDITOR.replace('contents', {
+            //     customConfig : '../editor/ckeditor/config.js',
+            //     width:'98%',
+            //     height:'500',
+            //     filebrowserImageUploadUrl: '../editor/ckeditor/ckeditor_upload.php?type=Images&CKEditor=editor1&CKEditorFuncNum=1&langCode=ko'
+            // });
+
+            CKEDITOR.replace('contents', {
+                customConfig : '../ckeditor/config.js',
+                enterMode : CKEDITOR.ENTER_BR , // 엔터키를 <br> 로 적용함.
+                height: 400,
+                filebrowserImageUploadUrl: '../ckeditor/ckeditor_upload.php?CKEditorFuncNum=1'
+            });
+                
+        </script>
+        <? include "../include/footer.html"; ?>
+    </body>
+</html>
